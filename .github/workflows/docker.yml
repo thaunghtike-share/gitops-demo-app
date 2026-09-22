@@ -50,6 +50,17 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
+      - name: Ensure ECR Repository Exists
+        shell: bash
+        run: |
+          if ! aws ecr describe-repositories \
+            --repository-names "$ECR_REPOSITORY" >/dev/null 2>&1; then
+            aws ecr create-repository \
+              --repository-name "$ECR_REPOSITORY" \
+              --image-scanning-configuration scanOnPush=true \
+              --image-tag-mutability MUTABLE
+          fi
+
       - name: Login to ECR
         uses: aws-actions/amazon-ecr-login@v2
 

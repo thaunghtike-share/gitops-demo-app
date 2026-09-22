@@ -82,5 +82,8 @@ AWS_ACCESS_KEY_ID
 AWS_SECRET_ACCESS_KEY
 ```
 
-The ECR repository must already exist in `us-east-1`. Kubernetes, Helm, and
-ArgoCD configuration should be maintained separately during the GitOps lab.
+The workflow creates the ECR repository in `us-east-1` when it does not already
+exist. The AWS identity used by CI therefore needs `ecr:DescribeRepositories`
+and `ecr:CreateRepository` permissions in addition to image push permissions.
+Kubernetes, Helm, and ArgoCD configuration should be maintained separately
+during the GitOps lab.
