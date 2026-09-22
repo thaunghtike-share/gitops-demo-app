@@ -1,0 +1,17 @@
+{
+  "name": "gitops-demo-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A stateless Express application for Docker, Kubernetes, Helm, and ArgoCD demonstrations.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "check": "node --check index.js"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "dependencies": {
+    "express": "5.1.0"
+  }
+}

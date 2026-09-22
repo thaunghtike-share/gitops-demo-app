@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta
+      name="description"
+      content="A lightweight Express application for Docker, Kubernetes, Helm, and ArgoCD deployment demonstrations."
+    >
+    <title>GitOps Demo App</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="page-shell">
+      <section class="hero" aria-labelledby="page-title">
+        <div class="hero__eyebrow">
+          <span class="hero__eyebrow-dot" aria-hidden="true"></span>
+          GitOps Training Environment
+        </div>
+
+        <h1 id="page-title">GitOps Demo App</h1>
+        <p class="hero__subtitle">
+          Deployed with Docker, Kubernetes, Helm &amp; ArgoCD
+        </p>
+
+        <div class="status" id="application-status" role="status">
+          <span class="status__indicator" aria-hidden="true"></span>
+          Application is Running
+        </div>
+
+        <div class="environment" aria-label="Deployment environment">
+          <span class="environment__label">Environment</span>
+          <strong>Production</strong>
+        </div>
+      </section>
+
+      <section class="technology-section" aria-labelledby="technology-title">
+        <div class="section-heading">
+          <p class="section-heading__label">Deployment toolchain</p>
+          <h2 id="technology-title">Built for the complete GitOps workflow</h2>
+        </div>
+
+        <div class="technology-grid">
+          <article class="technology-card">
+            <div class="technology-card__icon" aria-hidden="true">D</div>
+            <div>
+              <h3>Docker</h3>
+              <p>Containerized Application</p>
+            </div>
+          </article>
+
+          <article class="technology-card">
+            <div class="technology-card__icon" aria-hidden="true">K</div>
+            <div>
+              <h3>Kubernetes</h3>
+              <p>Container Orchestration</p>
+            </div>
+          </article>
+
+          <article class="technology-card">
+            <div class="technology-card__icon" aria-hidden="true">H</div>
+            <div>
+              <h3>Helm</h3>
+              <p>Kubernetes Package Management</p>
+            </div>
+          </article>
+
+          <article class="technology-card">
+            <div class="technology-card__icon" aria-hidden="true">A</div>
+            <div>
+              <h3>ArgoCD</h3>
+              <p>GitOps Continuous Delivery</p>
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p>Learn DevOps Now <span aria-hidden="true">–</span> Myanmar</p>
+    </footer>
+  </body>
+</html>
