@@ -21,7 +21,7 @@ app.get("/api", (_request, response) => {
   response.json({
     application: "gitops-demo-app",
     status: "running",
-    environment: "production",
+    environment: "uat",
     version: process.env.APP_VERSION || "1.0.0"
   });
 });
