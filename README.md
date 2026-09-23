@@ -1,7 +1,7 @@
 # GitOps Demo App
 
 A small, stateless Node.js and Express application for demonstrating a complete
-DevOps delivery flow with Docker, Amazon ECR, Kubernetes, Helm, and ArgoCD.
+DevOps delivery flow with Docker, Amazon ECR, Kubernetes, Helm, and ArgoCD
 
 The application has no database, authentication, persistent storage, or
 external API dependencies.
