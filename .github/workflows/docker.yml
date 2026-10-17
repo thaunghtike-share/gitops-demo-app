@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - dev
-      - uat
   workflow_dispatch:
 
 permissions:
@@ -18,7 +17,6 @@ env:
 jobs:
   docker-ci:
     name: Build and Push Docker Image
-    if: github.event_name != 'workflow_dispatch' || github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
 
     steps:
@@ -28,22 +26,12 @@ jobs:
       - name: Set Up Docker Buildx
         uses: docker/setup-buildx-action@v4
 
-      - name: Determine Environment and Image Tag
+      - name: Set Image Tag
         shell: bash
         run: |
-          if [[ "$GITHUB_REF" == "refs/heads/main" ]]; then
-            ENVIRONMENT=production
-          elif [[ "$GITHUB_REF" == "refs/heads/dev" ]]; then
-            ENVIRONMENT=dev
-          elif [[ "$GITHUB_REF" == "refs/heads/uat" ]]; then
-            ENVIRONMENT=uat
-          else
-            exit 1
-          fi
+          echo "IMAGE_TAG=dev-$(git rev-parse --short HEAD)" >> "$GITHUB_ENV"
 
-          echo "IMAGE_TAG=$ENVIRONMENT-$(git rev-parse --short HEAD)" >> "$GITHUB_ENV"
-
-      - name: Configure AWS credentials
+      - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v6.1.0
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -71,3 +59,31 @@ jobs:
             --push \
             -t "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG" \
             .
+
+      - name: Checkout GitOps Repository
+        uses: actions/checkout@v6
+        with:
+          repository: thaunghtike-share/gitops-lab
+          ref: main
+          path: gitops-lab
+          token: ${{ secrets.GITOPS_TOKEN }}
+
+      - name: Update Dev Image Tag
+        uses: mikefarah/yq@v4.45.1
+        with:
+          cmd: >
+            yq -i
+            '.image.tag = strenv(IMAGE_TAG)'
+            gitops-lab/helm-charts/gitops-demo-app/values-dev.yaml
+
+      - name: Push GitOps Changes
+        shell: bash
+        run: |
+          cd gitops-lab
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add helm-charts/gitops-demo-app/values-dev.yaml
+          git commit -m "Update dev image tag to $IMAGE_TAG"
+          git push origin main
