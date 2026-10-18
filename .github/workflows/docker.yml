@@ -82,32 +82,32 @@ jobs:
             -t "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG" \
             .
 
-      - name: Checkout GitOps Repository
-        uses: actions/checkout@v6
-        with:
-          repository: thaunghtike-share/gitops-lab
-          ref: main
-          path: gitops-lab
-          token: ${{ secrets.GITOPS_TOKEN }}
+      # - name: Checkout GitOps Repository
+      #   uses: actions/checkout@v6
+      #   with:
+      #     repository: thaunghtike-share/gitops-lab
+      #     ref: main
+      #     path: gitops-lab
+      #     token: ${{ secrets.GITOPS_TOKEN }}
 
-      - name: Update Image Tag
-        uses: mikefarah/yq@v4.45.1
-        with:
-          cmd: >
-            yq -i
-            '.image.tag = strenv(IMAGE_TAG)'
-            gitops-lab/helm-charts/gitops-demo-app/${{ env.VALUES_FILE }}
+      # - name: Update Image Tag
+      #   uses: mikefarah/yq@v4.45.1
+      #   with:
+      #     cmd: >
+      #       yq -i
+      #       '.image.tag = strenv(IMAGE_TAG)'
+      #       gitops-lab/helm-charts/gitops-demo-app/${{ env.VALUES_FILE }}
 
-      - name: Push GitOps Changes
-        shell: bash
-        run: |
-          cd gitops-lab
+      # - name: Push GitOps Changes
+      #   shell: bash
+      #   run: |
+      #     cd gitops-lab
 
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      #     git config user.name "github-actions[bot]"
+      #     git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git add helm-charts/gitops-demo-app/$VALUES_FILE
+      #     git add helm-charts/gitops-demo-app/$VALUES_FILE
 
-          git commit -m "Update $ENVIRONMENT image tag to $IMAGE_TAG"
+      #     git commit -m "Update $ENVIRONMENT image tag to $IMAGE_TAG"
 
-          git push origin main
+      #     git push origin main
