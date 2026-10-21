@@ -1,83 +1,367 @@
-<!doctype html>
+
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta
-      name="description"
-      content="A lightweight Express application for Docker, Kubernetes, Helm, and ArgoCD deployment demonstrations."
-    >
-    <title>GitOps Demo App</title>
-    <link rel="stylesheet" href="styles.css">
-  </head>
-  <body>
-    <main class="page-shell">
-      <section class="hero" aria-labelledby="page-title">
-        <div class="hero__eyebrow">
-          <span class="hero__eyebrow-dot" aria-hidden="true"></span>
-          GitOps Training Environment
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="GitOps Demo Application V2">
+  <title>GitOps Demo App - V2</title>
+
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #080d1b;
+      --panel: #121c30;
+      --border: #283650;
+      --text: #f2f6ff;
+      --muted: #94a3b8;
+      --accent: #38bdf8;
+      --purple: #a78bfa;
+      --green: #34d399;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
+      background:
+        radial-gradient(
+          ellipse at 50% 0%,
+          #182b50 0%,
+          transparent 55%
+        ),
+        var(--bg);
+      color: var(--text);
+    }
+
+    .container {
+      width: min(1100px, calc(100% - 40px));
+      margin: auto;
+    }
+
+    header {
+      padding: 28px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .brand {
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -.5px;
+    }
+
+    .brand span {
+      color: var(--accent);
+    }
+
+    .header-tag {
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: 2px;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 95px 0 60px;
+    }
+
+    .version {
+      display: inline-block;
+      padding: 9px 18px;
+      border: 1px solid #365b86;
+      border-radius: 100px;
+      color: var(--accent);
+      background: #102742;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 2px;
+    }
+
+    h1 {
+      margin: 26px 0 18px;
+      font-size: clamp(38px, 6vw, 72px);
+      line-height: 1.1;
+      letter-spacing: -3px;
+    }
+
+    h1 span {
+      background: linear-gradient(
+        90deg,
+        var(--accent),
+        var(--purple)
+      );
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .subtitle {
+      max-width: 650px;
+      margin: 0 auto;
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.8;
+    }
+
+    .status-panel {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 36px;
+    }
+
+    .pill {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 13px 20px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--panel);
+      font-size: 13px;
+    }
+
+    .pill strong {
+      color: var(--text);
+    }
+
+    .pill .label {
+      color: var(--muted);
+    }
+
+    .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 12px var(--green);
+    }
+
+    .section-heading {
+      margin: 30px 0;
+      text-align: center;
+    }
+
+    .section-heading small {
+      color: var(--accent);
+      font-weight: 700;
+      letter-spacing: 2px;
+    }
+
+    .section-heading h2 {
+      font-size: clamp(24px, 4vw, 34px);
+      letter-spacing: -1px;
+    }
+
+    .technology-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      padding-bottom: 75px;
+    }
+
+    .card {
+      padding: 26px;
+      background: linear-gradient(
+        150deg,
+        #18253c,
+        #101827
+      );
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      transition: transform .2s, border-color .2s;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      border-color: var(--accent);
+    }
+
+    .icon {
+      display: grid;
+      place-items: center;
+      width: 48px;
+      height: 48px;
+      border-radius: 13px;
+      background: #173455;
+      color: var(--accent);
+      font-size: 21px;
+      font-weight: 800;
+    }
+
+    .card:nth-child(2) .icon {
+      background: #202d52;
+      color: #93c5fd;
+    }
+
+    .card:nth-child(3) .icon {
+      background: #302348;
+      color: var(--purple);
+    }
+
+    .card:nth-child(4) .icon {
+      background: #163c36;
+      color: var(--green);
+    }
+
+    .card h3 {
+      margin: 24px 0 8px;
+      font-size: 19px;
+    }
+
+    .card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    footer {
+      padding: 25px;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      text-align: center;
+      font-size: 13px;
+    }
+
+    @media (max-width: 800px) {
+      .technology-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .hero {
+        padding-top: 65px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .technology-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .header-tag {
+        display: none;
+      }
+
+      h1 {
+        letter-spacing: -1.5px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <nav class="container navbar">
+      <div class="brand">
+        <span>◆</span> GitOps Demo
+      </div>
+      <div class="header-tag">
+        LEARN DEVOPS NOW
+      </div>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div class="version">
+        RELEASE VERSION 2.0
+      </div>
+
+      <h1>
+        GitOps Demo<br>
+        <span>Application V2</span>
+      </h1>
+
+      <p class="subtitle">
+        Experience modern cloud-native deployment
+        powered by Docker, Kubernetes, Helm,
+        and ArgoCD.
+      </p>
+
+      <div class="status-panel">
+        <div class="pill" id="application-status" role="status">
+          <span class="dot" aria-hidden="true"></span>
+          <strong>Application Running</strong>
         </div>
 
-        <h1 id="page-title">GitOps Demo App</h1>
-        <p class="hero__subtitle">
-          Deployed with Docker, Kubernetes, Helm &amp; ArgoCD
-        </p>
-
-        <div class="status" id="application-status" role="status">
-          <span class="status__indicator" aria-hidden="true"></span>
-          Application is Running
+        <div class="pill">
+          <span class="label">Environment</span>
+          <strong>Development</strong>
         </div>
 
-        <div class="environment" aria-label="Deployment environment">
-          <span class="environment__label">Environment</span>
-          <strong>Production</strong>
+        <div class="pill">
+          <span class="label">Version</span>
+          <strong>v2.0.0</strong>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <section class="technology-section" aria-labelledby="technology-title">
-        <div class="section-heading">
-          <p class="section-heading__label">Deployment toolchain</p>
-          <h2 id="technology-title">Built for the complete GitOps workflow</h2>
-        </div>
+    <section aria-labelledby="toolchain-title">
+      <div class="section-heading">
+        <small>OUR TECHNOLOGY STACK</small>
+        <h2 id="toolchain-title">
+          Built for Cloud-Native Delivery
+        </h2>
+      </div>
 
-        <div class="technology-grid">
-          <article class="technology-card">
-            <div class="technology-card__icon" aria-hidden="true">D</div>
-            <div>
-              <h3>Docker</h3>
-              <p>Containerized Application</p>
-            </div>
-          </article>
+      <div class="technology-grid">
+        <article class="card">
+          <div class="icon" aria-hidden="true">D</div>
+          <h3>Docker</h3>
+          <p>
+            Containerized application packaging
+            and consistent deployments.
+          </p>
+        </article>
 
-          <article class="technology-card">
-            <div class="technology-card__icon" aria-hidden="true">K</div>
-            <div>
-              <h3>Kubernetes</h3>
-              <p>Container Orchestration</p>
-            </div>
-          </article>
+        <article class="card">
+          <div class="icon" aria-hidden="true">K</div>
+          <h3>Kubernetes</h3>
+          <p>
+            Scalable container orchestration
+            and workload management.
+          </p>
+        </article>
 
-          <article class="technology-card">
-            <div class="technology-card__icon" aria-hidden="true">H</div>
-            <div>
-              <h3>Helm</h3>
-              <p>Kubernetes Package Management</p>
-            </div>
-          </article>
+        <article class="card">
+          <div class="icon" aria-hidden="true">H</div>
+          <h3>Helm</h3>
+          <p>
+            Declarative Kubernetes application
+            configuration and releases.
+          </p>
+        </article>
 
-          <article class="technology-card">
-            <div class="technology-card__icon" aria-hidden="true">A</div>
-            <div>
-              <h3>ArgoCD</h3>
-              <p>GitOps Continuous Delivery</p>
-            </div>
-          </article>
-        </div>
-      </section>
-    </main>
+        <article class="card">
+          <div class="icon" aria-hidden="true">A</div>
+          <h3>ArgoCD</h3>
+          <p>
+            GitOps continuous delivery and
+            automated synchronization.
+          </p>
+        </article>
+      </div>
+    </section>
+  </main>
 
-    <footer>
-      <p>Learn DevOps Now <span aria-hidden="true">–</span> Myanmar</p>
-    </footer>
-  </body>
+  <footer>
+    Learn DevOps Now – Myanmar
+    <span aria-hidden="true"> | </span>
+    GitOps Demo Application V2
+  </footer>
+</body>
 </html>
